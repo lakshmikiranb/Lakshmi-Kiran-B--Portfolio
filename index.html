@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lakshmi Kiran B | IT Support Portfolio</title>
+    <title>Lakshmi Kiran B | Portfolio</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -11,176 +11,202 @@
 
     <style>
         :root { --primary: #0a66c2; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* Navigation & Admin State */
-        .admin-controls { display: none; background: #000; border: 1px dashed var(--primary); padding: 20px; margin: 20px; border-radius: 10px; text-align: center; }
+        /* Login Overlay */
+        #loginOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        header { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); }
-        .container { max-width: 1000px; margin: -30px auto 50px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        /* Layout */
+        #mainContent { display: none; padding: 20px; max-width: 1100px; margin: auto; }
+        header { text-align: center; padding: 40px; background: linear-gradient(135deg, #0a66c2, #1e293b); border-radius: 0 0 20px 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
         
-        .btn { display: inline-block; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; margin: 5px; transition: 0.3s; }
-        .btn-resume { background: #ffffff; color: #0a66c2; }
-        .btn-admin { background: rgba(255,255,255,0.1); color: white; border: 1px solid white; }
-        .btn-upload { background: #22c55e; color: white; }
-
-        [contenteditable="true"] { border: 1px dashed #fbbf24; background: rgba(251, 191, 36, 0.1); outline: none; padding: 3px; }
-        h2 { color: var(--primary); border-bottom: 2px solid #334155; padding-bottom: 10px; margin-top: 0; }
-        ul { padding-left: 20px; }
-        li { margin-bottom: 8px; }
+        /* Admin UI */
+        .admin-toolbar { display: none; background: #fbbf24; color: #000; padding: 10px; text-align: center; position: sticky; top: 0; z-index: 100; font-weight: bold; }
+        [contenteditable="true"] { border: 1px dashed #0a66c2; padding: 5px; background: rgba(10, 102, 194, 0.1); outline: none; }
+        
+        .btn { padding: 10px 20px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; text-decoration: none; display: inline-block; margin: 5px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { border: 1px solid white; color: white; background: transparent; }
+        
+        select { width: 100%; padding: 10px; border-radius: 5px; background: #334155; color: white; border: none; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1 id="userName" contenteditable="false">Lakshmi Kiran B</h1>
-    <p id="userHeadline" contenteditable="false">L1/L2 IT Support Engineer | Active Directory & Office 365 | ServiceNow | ITIL V4</p>
-    <p>Bangalore, India | lakshmi2000kiran@gmail.com</p>
-    
-    <div style="margin-top: 25px;">
-        <a href="#" id="resumeLink" class="btn btn-resume" target="_blank">📄 Download Resume</a>
-        
-        <button id="loginBtn" class="btn btn-admin" onclick="login()">🔐 Admin Login</button>
-        <button id="logoutBtn" class="btn btn-admin" style="display:none; background:#ef4444;" onclick="logout()">Logout</button>
-    </div>
+<div id="loginOverlay">
+    <h1>Lakshmi Kiran B</h1>
+    <p>IT Support Engineer Portfolio</p>
+    <button class="btn btn-primary" onclick="login()">Sign in with Google to View</button>
+</div>
 
-    <div id="adminPanel" class="admin-controls">
-        <h3>Welcome, Admin Lakshmi</h3>
-        <p>Edit any text on this page directly, then upload your resume below:</p>
-        <input type="file" id="resumeFile" style="color:white; margin-bottom:10px;">
-        <br>
-        <button class="btn btn-upload" onclick="uploadResume()">Upload to Cloud</button>
-        <button class="btn" style="background:#3b82f6; color:white;" onclick="saveText()">Save All Text Changes</button>
-        <p id="status" style="color:#22c55e; font-weight:bold;"></p>
-    </div>
-</header>
+<div id="adminToolbar" class="admin-toolbar">
+    YOU ARE IN ADMIN MODE: Click any text to edit. 
+    <button onclick="saveAll()" style="margin-left:20px; padding:5px 10px; cursor:pointer;">💾 Save Portfolio Changes</button>
+    <button onclick="logout()" style="background:red; color:white; border:none; padding:5px 10px; margin-left:10px;">Logout</button>
+</div>
 
-<div class="container">
-    <div class="card">
-        <h2>Professional Summary</h2>
-        <p id="pSummary" contenteditable="false">
-            IT Support professional with 1+ year experience in enterprise environments. 
-            Proven track record in managing 150+ users and resolving 50+ tickets weekly.
-        </p>
-    </div>
-
-    <div class="card">
-        <h2>Technical Skills</h2>
-        <ul id="pSkills" contenteditable="false">
-            <li>ServiceNow (Incident Management)</li>
-            <li>Active Directory & Office 365</li>
-            <li>Windows Server 2019 Deployment</li>
-            <li>DNS, DHCP & Networking</li>
-        </ul>
-    </div>
-
-    <div class="card">
-        <h2>Experience</h2>
-        <div id="pExp" contenteditable="false">
-            <strong>Athena BPO Pvt Ltd</strong><br>
-            L1/L2 IT Support Engineer<br>
-            95% First-call resolution rate.
+<div id="mainContent">
+    <header>
+        <h1 id="name" contenteditable="false">Lakshmi Kiran B</h1>
+        <p id="title" contenteditable="false">IT Support Engineer</p>
+        <p>📍 Bangalore | 📞 +91-8374056396</p>
+        <div style="margin-top:20px;">
+            <a href="#" id="resumeBtn" class="btn btn-outline" download>📥 Download My Resume</a>
+            <div id="adminUpload" style="display:none; margin-top:10px;">
+                <input type="file" id="resumeInput">
+                <button onclick="uploadFile('resume')">Upload New Resume</button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <div class="card">
-        <h2>Education & Projects</h2>
-        <div id="pEdu" contenteditable="false">
-            <strong>Project:</strong> Air Quality Monitoring System (95% Accuracy)<br>
-            <strong>Cert:</strong> ITIL V4 (Simplilearn)
+    <div class="grid">
+        <div class="card">
+            <h2>Professional Summary</h2>
+            <p id="summary" contenteditable="false">
+                IT Support Engineer with 1+ year experience in L1/L2 support. 
+                Proficient in Active Directory, OS deployment, and incident resolution.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Experience</h2>
+            <div id="experience" contenteditable="false">
+                <b>Athena BPO Pvt Ltd</b> (Nov 2024 - Present)<br>
+                Managed 150+ AD users and 100+ Windows workstations. 
+                Achieved 95% first-call resolution rate.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Education</h2>
+            <div id="education" contenteditable="false">
+                <b>B.Tech - ECE (2018-2022)</b><br>
+                Annamacharya Institute of Technology, Tirupati | CGPA: 7.5
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Certifications</h2>
+            <select id="certDropdown">
+                <option value="">-- Select a Certificate to View --</option>
+                <option value="vlsi">VLSI Design Verification - VLSIGURU</option>
+                <option value="ai">AI & Data Analytics - NoviTech</option>
+            </select>
+            <div id="certAdmin" style="display:none; margin-top:15px;">
+                <input type="text" id="certName" placeholder="Cert Name">
+                <input type="file" id="certFile">
+                <button onclick="uploadFile('cert')" class="btn-primary" style="font-size:12px;">Add Certificate</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Academic Project</h2>
+            <p id="project" contenteditable="false">
+                <b>Arduino-Based Air Quality Monitoring:</b> 
+                IoT system using MQ-135 and DHT11 sensors (95% accuracy).
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Technical Skills</h2>
+            <div id="skills" contenteditable="false">
+                Windows Server, Active Directory, TCP/IP, DNS, PST Management, Remote Support.
+            </div>
         </div>
     </div>
 </div>
 
-<footer style="text-align:center; padding:20px; color:#64748b;">
-    © 2026 Lakshmi Kiran B | Information Technology Executive
-</footer>
-
 <script>
 // --- CONFIGURATION ---
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const storage = firebase.storage();
-const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
+const MY_EMAIL = "lakshmi2000kiran@gmail.com";
 
-// --- LOGIN LOGIC ---
+// --- AUTHENTICATION ---
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(res => {
-        if (res.user.email === ADMIN_EMAIL) {
-            showAdminTools();
-        } else {
-            alert("Unauthorized access denied.");
-            auth.signOut();
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        
+        if (res.user.email === MY_EMAIL) {
+            enableAdmin();
         }
     });
 }
 
-function showAdminTools() {
-    document.getElementById("loginBtn").style.display = "none";
-    document.getElementById("logoutBtn").style.display = "inline-block";
-    document.getElementById("adminPanel").style.display = "block";
-    document.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = "true");
+function enableAdmin() {
+    document.getElementById('adminToolbar').style.display = 'block';
+    document.getElementById('adminUpload').style.display = 'block';
+    document.getElementById('certAdmin').style.display = 'block';
+    document.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "true");
 }
 
 function logout() { auth.signOut().then(() => location.reload()); }
 
-// --- FILE UPLOAD LOGIC ---
-function uploadResume() {
-    const file = document.getElementById('resumeFile').files[0];
-    if(!file) return alert("Select a file!");
+// --- FILE UPLOAD (Resume & Certs) ---
+function uploadFile(type) {
+    const file = type === 'resume' ? document.getElementById('resumeInput').files[0] : document.getElementById('certFile').files[0];
+    if(!file) return alert("Select file!");
 
-    const ref = storage.ref('resumes/Lakshmi_Kiran_Resume.' + file.name.split('.').pop());
-    const task = ref.put(file);
-
-    task.on('state_changed', 
-        snap => { document.getElementById('status').innerText = "Uploading..."; },
-        err => alert(err),
-        () => {
-            task.snapshot.ref.getDownloadURL().then(url => {
-                document.getElementById('resumeLink').href = url;
+    const path = type === 'resume' ? 'resumes/resume' : 'certs/' + document.getElementById('certName').value;
+    const ref = storage.ref(path);
+    
+    ref.put(file).then(() => {
+        ref.getDownloadURL().then(url => {
+            if(type === 'resume') {
+                document.getElementById('resumeBtn').href = url;
                 localStorage.setItem('resumeURL', url);
-                document.getElementById('status').innerText = "Resume Uploaded Successfully! ✅";
-            });
-        }
-    );
+            } else {
+                const opt = document.createElement('option');
+                opt.value = url;
+                opt.text = document.getElementById('certName').value;
+                document.getElementById('certDropdown').add(opt);
+                // Save updated cert list logic here
+            }
+            alert("Uploaded successfully!");
+        });
+    });
 }
 
-// --- SAVE TEXT LOGIC ---
-function saveText() {
-    const profile = {
-        name: document.getElementById("userName").innerText,
-        headline: document.getElementById("userHeadline").innerText,
-        summary: document.getElementById("pSummary").innerText,
-        skills: document.getElementById("pSkills").innerHTML,
-        exp: document.getElementById("pExp").innerHTML,
-        edu: document.getElementById("pEdu").innerHTML
+// --- PERSISTENCE ---
+function saveAll() {
+    const data = {
+        summary: document.getElementById('summary').innerText,
+        experience: document.getElementById('experience').innerHTML,
+        skills: document.getElementById('skills').innerText,
+        education: document.getElementById('education').innerHTML,
+        project: document.getElementById('project').innerHTML
     };
-    localStorage.setItem('profileData', JSON.stringify(profile));
-    alert("Profile text saved locally!");
+    localStorage.setItem('portfolioData', JSON.stringify(data));
+    alert("Portfolio data saved!");
 }
 
-// --- INITIAL LOAD ---
 window.onload = () => {
-    const saved = JSON.parse(localStorage.getItem('profileData'));
+    const saved = JSON.parse(localStorage.getItem('portfolioData'));
     const resume = localStorage.getItem('resumeURL');
     if(saved) {
-        document.getElementById("userName").innerText = saved.name;
-        document.getElementById("userHeadline").innerText = saved.headline;
-        document.getElementById("pSummary").innerText = saved.summary;
-        document.getElementById("pSkills").innerHTML = saved.skills;
-        document.getElementById("pExp").innerHTML = saved.exp;
-        document.getElementById("pEdu").innerHTML = saved.edu;
+        document.getElementById('summary').innerText = saved.summary;
+        document.getElementById('experience').innerHTML = saved.experience;
+        document.getElementById('skills').innerText = saved.skills;
+        document.getElementById('education').innerHTML = saved.education;
+        document.getElementById('project').innerHTML = saved.project;
     }
-    if(resume) document.getElementById("resumeLink").href = resume;
+    if(resume) document.getElementById('resumeBtn').href = resume;
+};
+
+// Dropdown redirect
+document.getElementById('certDropdown').onchange = function() {
+    if(this.value) window.open(this.value, '_blank');
 };
 </script>
 
