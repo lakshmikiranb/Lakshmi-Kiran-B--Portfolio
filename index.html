@@ -36,19 +36,17 @@ header {
     background: linear-gradient(135deg, #0a66c2, #1e293b);
 }
 
-h1 { margin: 0; font-size: 40px; }
+h1 { margin: 0; font-size: 38px; }
 
 .tagline { margin: 10px 0; }
 
 .btn {
-    display: inline-block;
-    margin: 8px;
+    margin: 6px;
     padding: 10px 16px;
-    border-radius: 6px;
     background: var(--primary);
     color: white;
-    text-decoration: none;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
 }
 
@@ -60,7 +58,6 @@ h1 { margin: 0; font-size: 40px; }
     color: black;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 5px;
 }
 
 .container {
@@ -106,8 +103,10 @@ footer {
 
 <header>
 <h1>Lakshmi Kiran B</h1>
-<p class="tagline">IT Support Engineer | ServiceNow | Active Directory | ITIL V4</p>
-<p>lakshmi2000kiran@gmail.com</p>
+<p class="tagline">
+L1/L2 IT Support Engineer | Active Directory & Office 365 | Windows Server | ServiceNow | ITIL V4
+</p>
+<p>Bangalore, India | lakshmi2000kiran@gmail.com</p>
 
 <a href="Lakshmi_Kiran_Resume.pdf" class="btn" download>📄 Download Resume</a>
 <button class="btn" onclick="login()">🔐 Admin Login</button>
@@ -121,16 +120,22 @@ footer {
 
 <div class="card">
 <h2>About</h2>
-<p>IT Support Engineer with 1+ year experience in L1/L2 support, Active Directory, ServiceNow, and Windows systems.</p>
+<p>
+IT Support Engineer with 1+ year experience providing L1/L2 support in enterprise environments.
+Specialized in Active Directory, Office 365, Windows Server, and ServiceNow ticketing.
+
+Focused on root cause analysis, reducing downtime, and improving user experience.
+</p>
 </div>
 
 <div class="card">
-<h2>Achievements</h2>
+<h2>Key Achievements</h2>
 <ul>
-<li>100+ systems supported</li>
-<li>95% resolution rate</li>
-<li>40% faster setup</li>
-<li>30% faster response</li>
+<li>Supported 100+ systems & 150+ users</li>
+<li>Handled 50+ tickets per week</li>
+<li>95% first-call resolution</li>
+<li>Reduced setup time by 40%</li>
+<li>Improved response time by 30%</li>
 </ul>
 </div>
 
@@ -139,30 +144,76 @@ footer {
 <div class="skills">
 <span>ServiceNow (Beginner)</span>
 <span>Active Directory</span>
-<span>Windows</span>
+<span>Office 365</span>
+<span>Windows Server</span>
 <span>Networking</span>
 <span>DNS</span>
-<span>Outlook</span>
+<span>Outlook & PST</span>
+<span>Remote Support</span>
 </div>
 </div>
 
 <div class="card">
 <h2>Experience</h2>
-<p><b>Athena BPO</b> – IT Support</p>
-<p>ServiceNow ticket handling, AD management, email troubleshooting.</p>
+<p><b>Athena BPO Pvt Ltd</b></p>
+<ul>
+<li>L1/L2 support for enterprise users</li>
+<li>Managed 150+ Active Directory users</li>
+<li>Handled 50+ weekly tickets</li>
+<li>OS & Office deployments</li>
+<li>Outlook troubleshooting</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>ServiceNow Experience</h2>
+<ul>
+<li>Created & managed incident tickets</li>
+<li>Assigned priority based on impact</li>
+<li>Updated work notes</li>
+<li>Managed full lifecycle (open → resolve)</li>
+</ul>
+</div>
+
+<!-- 🔥 REAL INCIDENT SECTION -->
+<div class="card">
+<h2>Real Incident Experience</h2>
+
+<p><b>📌 Outlook Not Receiving Emails</b></p>
+<ul>
+<li>Diagnosed PST corruption</li>
+<li>Recreated profile & repaired PST</li>
+<li>Restored service within SLA</li>
+</ul>
+
+<p><b>📌 Slow System Performance</b></p>
+<ul>
+<li>Identified startup apps & high RAM usage</li>
+<li>Optimized system performance</li>
+</ul>
+
+<p><b>📌 No Internet (Wi-Fi Connected)</b></p>
+<ul>
+<li>Diagnosed DNS issue</li>
+<li>Flushed DNS & updated settings</li>
+<li>Resolved quickly</li>
+</ul>
+
 </div>
 
 <div class="card">
 <h2>Certifications</h2>
 <ul>
-<li>ITIL V4 – Simplilearn SkillUp</li>
-<li>VLSI Internship</li>
+<li>Introduction to ITIL V4 – Simplilearn SkillUp</li>
+<li>VLSI Internship – VLSIGURU</li>
+<li>AI & Data Analytics</li>
 </ul>
 </div>
 
 <div class="card">
 <h2>Project</h2>
-<p>Air Quality Monitoring (Arduino)</p>
+<p><b>Air Quality Monitoring System</b></p>
+<p>Arduino-based IoT system with 95% accuracy.</p>
 </div>
 
 </div>
@@ -173,7 +224,7 @@ footer {
 </footer>
 
 <script>
-// Dark mode
+// Dark Mode
 function toggleMode() {
     document.body.classList.toggle("light");
 }
@@ -193,9 +244,7 @@ const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
 // Login
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
-
-    auth.signInWithPopup(provider)
-    .then(result => {
+    auth.signInWithPopup(provider).then(result => {
         if (result.user.email === ADMIN_EMAIL) {
             alert("Admin Access Granted ✅");
             document.getElementById("uploadBtn").style.display = "inline-block";
