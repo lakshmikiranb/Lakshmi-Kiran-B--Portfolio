@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lakshmi Kiran | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js" defer></script>
+</head>
+
+<body>
+
+<header>
+    <h2>LK</h2>
+    <div>
+        <button onclick="downloadResume()">Download Resume</button>
+        <button onclick="showLogin()">Admin</button>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <h1 id="name">Loading...</h1>
+    <h3 id="role"></h3>
+    <p id="about"></p>
+</section>
+
+<!-- SKILLS -->
+<section>
+    <h2>Skills</h2>
+    <div class="grid">
+        <div>Windows / OS Support</div>
+        <div>Networking Basics</div>
+        <div>ServiceNow</div>
+        <div>ITIL</div>
+        <div>Cloud (AWS/Azure Basics)</div>
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section>
+    <h2>Projects</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Portfolio Website</h3>
+            <p>Dynamic portfolio using Firebase backend.</p>
+        </div>
+        <div class="card">
+            <h3>IT Support Toolkit</h3>
+            <p>Troubleshooting scripts and solutions.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section>
+    <h2>Certifications</h2>
+    <div class="grid">
+        <div class="card">ITIL 4 Foundation</div>
+        <div class="card">Cloud Computing Basics</div>
+    </div>
+</section>
+
+<!-- LOGIN -->
+<div id="login" class="hidden">
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="hidden">
+    <h2>Admin Panel</h2>
+    <input id="newName" placeholder="Name"><br>
+    <input id="newRole" placeholder="Role"><br>
+    <textarea id="newAbout"></textarea><br>
+    <input type="file" id="resume"><br>
+    <button onclick="save()">Save</button>
+</div>
+
+</body>
+</html>
