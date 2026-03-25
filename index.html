@@ -11,84 +11,94 @@
 
     <style>
         :root { --primary: #0a66c2; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
         
-        /* Navigation & Admin Status */
-        .nav-bar { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; display: flex; justify-content: flex-end; position: sticky; top: 0; z-index: 1000; }
-        .admin-only { display: none; border: 2px solid #fbbf24; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #000; }
+        /* Navigation & Admin State */
+        .admin-controls { display: none; background: #000; border: 1px dashed var(--primary); padding: 20px; margin: 20px; border-radius: 10px; text-align: center; }
         
-        header { text-align: center; padding: 80px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%); }
-        h1 { font-size: 2.5rem; margin: 0; }
+        header { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); }
+        .container { max-width: 1000px; margin: -30px auto 50px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         
-        .container { max-width: 1000px; margin: -40px auto 40px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
+        .btn { display: inline-block; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; margin: 5px; transition: 0.3s; }
+        .btn-resume { background: #ffffff; color: #0a66c2; }
+        .btn-admin { background: rgba(255,255,255,0.1); color: white; border: 1px solid white; }
+        .btn-upload { background: #22c55e; color: white; }
 
-        .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; margin: 5px; }
-        .btn-resume { background: #3b82f6; color: white; }
-        .btn-admin { background: #64748b; color: white; }
-        .btn-upload { background: #10b981; color: white; margin-top: 10px; }
-
-        [contenteditable="true"] { border: 1px dashed var(--primary); outline: none; background: rgba(10, 102, 194, 0.1); }
-        footer { text-align: center; padding: 40px; color: #64748b; }
+        [contenteditable="true"] { border: 1px dashed #fbbf24; background: rgba(251, 191, 36, 0.1); outline: none; padding: 3px; }
+        h2 { color: var(--primary); border-bottom: 2px solid #334155; padding-bottom: 10px; margin-top: 0; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<div class="nav-bar">
-    <button class="btn btn-admin" id="loginBtn" onclick="login()">🔐 Admin Login</button>
-    <button class="btn admin-only" id="logoutBtn" onclick="logout()" style="background:#ef4444">Logout</button>
-</div>
-
 <header>
-    <h1 id="pName" contenteditable="false">Lakshmi Kiran B</h1>
-    <p id="pTitle" contenteditable="false">L1/L2 IT Support Engineer | ServiceNow Specialist</p>
+    <h1 id="userName" contenteditable="false">Lakshmi Kiran B</h1>
+    <p id="userHeadline" contenteditable="false">L1/L2 IT Support Engineer | Active Directory & Office 365 | ServiceNow | ITIL V4</p>
+    <p>Bangalore, India | lakshmi2000kiran@gmail.com</p>
     
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 25px;">
         <a href="#" id="resumeLink" class="btn btn-resume" target="_blank">📄 Download Resume</a>
+        
+        <button id="loginBtn" class="btn btn-admin" onclick="login()">🔐 Admin Login</button>
+        <button id="logoutBtn" class="btn btn-admin" style="display:none; background:#ef4444;" onclick="logout()">Logout</button>
     </div>
 
-    <div class="container admin-only">
-        <div class="card" style="grid-column: 1 / -1; background: #000;">
-            <h3>Admin Panel: Portfolio Manager</h3>
-            <p>1. Edit text directly on the page below.<br>2. Upload any file format (PDF, DOCX) here:</p>
-            <input type="file" id="fileInput">
-            <button class="btn btn-upload" onclick="handleUpload()">Cloud Upload Resume</button>
-            <button class="btn" style="background: #0a66c2; color:white;" onclick="saveTextData()">💾 Save Text Changes</button>
-            <p id="upStatus" style="color: #10b981; font-weight: bold;"></p>
-        </div>
+    <div id="adminPanel" class="admin-controls">
+        <h3>Welcome, Admin Lakshmi</h3>
+        <p>Edit any text on this page directly, then upload your resume below:</p>
+        <input type="file" id="resumeFile" style="color:white; margin-bottom:10px;">
+        <br>
+        <button class="btn btn-upload" onclick="uploadResume()">Upload to Cloud</button>
+        <button class="btn" style="background:#3b82f6; color:white;" onclick="saveText()">Save All Text Changes</button>
+        <p id="status" style="color:#22c55e; font-weight:bold;"></p>
     </div>
 </header>
 
 <div class="container">
     <div class="card">
-        <h2>About</h2>
-        <p id="pAbout" contenteditable="false">IT Support Engineer with 1+ year experience in Active Directory, Office 365, and ServiceNow. Focused on root cause analysis and improving user experience.</p>
+        <h2>Professional Summary</h2>
+        <p id="pSummary" contenteditable="false">
+            IT Support professional with 1+ year experience in enterprise environments. 
+            Proven track record in managing 150+ users and resolving 50+ tickets weekly.
+        </p>
     </div>
 
     <div class="card">
-        <h2>Key Achievements</h2>
-        <ul id="pAchievements" contenteditable="false">
-            <li>95% first-call resolution rate</li>
-            <li>Managed 150+ Active Directory users</li>
-            <li>Reduced setup time by 40%</li>
+        <h2>Technical Skills</h2>
+        <ul id="pSkills" contenteditable="false">
+            <li>ServiceNow (Incident Management)</li>
+            <li>Active Directory & Office 365</li>
+            <li>Windows Server 2019 Deployment</li>
+            <li>DNS, DHCP & Networking</li>
         </ul>
     </div>
 
     <div class="card">
-        <h2>ServiceNow Experience</h2>
-        <ul id="pSNow" contenteditable="false">
-            <li>Incident Management lifecycle</li>
-            <li>Priority based assignment</li>
-            <li>Documentation & Work Notes</li>
-        </ul>
+        <h2>Experience</h2>
+        <div id="pExp" contenteditable="false">
+            <strong>Athena BPO Pvt Ltd</strong><br>
+            L1/L2 IT Support Engineer<br>
+            95% First-call resolution rate.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Education & Projects</h2>
+        <div id="pEdu" contenteditable="false">
+            <strong>Project:</strong> Air Quality Monitoring System (95% Accuracy)<br>
+            <strong>Cert:</strong> ITIL V4 (Simplilearn)
+        </div>
     </div>
 </div>
 
-<footer>© 2026 Lakshmi Kiran B | Information Technology Executive</footer>
+<footer style="text-align:center; padding:20px; color:#64748b;">
+    © 2026 Lakshmi Kiran B | Information Technology Executive
+</footer>
 
 <script>
-// --- 1. FIREBASE CONFIG (Required for live functionality) ---
+// --- CONFIGURATION ---
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -99,77 +109,76 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const storage = firebase.storage();
-const MY_EMAIL = "lakshmi2000kiran@gmail.com";
+const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
 
-// --- 2. ADMIN REDIRECT & LOGIN ---
+// --- LOGIN LOGIC ---
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(res => {
-        if (res.user.email === MY_EMAIL) {
-            enterAdminMode();
+        if (res.user.email === ADMIN_EMAIL) {
+            showAdminTools();
         } else {
-            alert("Unauthorized! Access restricted to Lakshmi Kiran B.");
+            alert("Unauthorized access denied.");
             auth.signOut();
         }
-    }).catch(err => console.error(err));
+    });
 }
 
-function enterAdminMode() {
+function showAdminTools() {
     document.getElementById("loginBtn").style.display = "none";
-    document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    document.getElementById("adminPanel").style.display = "block";
     document.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = "true");
-    alert("Welcome back, Lakshmi! Edit mode is now active.");
 }
 
 function logout() { auth.signOut().then(() => location.reload()); }
 
-// --- 3. RESUME UPLOAD (Updates the Download button for everyone) ---
-function handleUpload() {
-    const file = document.getElementById('fileInput').files[0];
-    if(!file) return alert("Select a file first.");
+// --- FILE UPLOAD LOGIC ---
+function uploadResume() {
+    const file = document.getElementById('resumeFile').files[0];
+    if(!file) return alert("Select a file!");
 
-    const ref = storage.ref('active_resume/Lakshmi_Kiran_Resume.' + file.name.split('.').pop());
+    const ref = storage.ref('resumes/Lakshmi_Kiran_Resume.' + file.name.split('.').pop());
     const task = ref.put(file);
 
     task.on('state_changed', 
-        snap => {
-            let pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-            document.getElementById('upStatus').innerText = "Uploading: " + pct + "%";
-        },
-        err => alert("Upload failed. Ensure Firebase Storage rules allow access."),
+        snap => { document.getElementById('status').innerText = "Uploading..."; },
+        err => alert(err),
         () => {
             task.snapshot.ref.getDownloadURL().then(url => {
                 document.getElementById('resumeLink').href = url;
-                localStorage.setItem('liveResumeURL', url);
-                alert("Resume uploaded! It is now available for download by visitors.");
+                localStorage.setItem('resumeURL', url);
+                document.getElementById('status').innerText = "Resume Uploaded Successfully! ✅";
             });
         }
     );
 }
 
-// --- 4. SAVE TEXT CHANGES ---
-function saveTextData() {
-    const data = {
-        name: document.getElementById("pName").innerText,
-        title: document.getElementById("pTitle").innerText,
-        about: document.getElementById("pAbout").innerText,
-        achievements: document.getElementById("pAchievements").innerHTML,
-        snow: document.getElementById("pSNow").innerHTML
+// --- SAVE TEXT LOGIC ---
+function saveText() {
+    const profile = {
+        name: document.getElementById("userName").innerText,
+        headline: document.getElementById("userHeadline").innerText,
+        summary: document.getElementById("pSummary").innerText,
+        skills: document.getElementById("pSkills").innerHTML,
+        exp: document.getElementById("pExp").innerHTML,
+        edu: document.getElementById("pEdu").innerHTML
     };
-    localStorage.setItem('portfolioContent', JSON.stringify(data));
-    alert("Content saved locally! (Connect to Firestore for cloud sync)");
+    localStorage.setItem('profileData', JSON.stringify(profile));
+    alert("Profile text saved locally!");
 }
 
-// Load saved data on page load
+// --- INITIAL LOAD ---
 window.onload = () => {
-    const content = JSON.parse(localStorage.getItem('portfolioContent'));
-    const resume = localStorage.getItem('liveResumeURL');
-    if(content) {
-        document.getElementById("pName").innerText = content.name;
-        document.getElementById("pTitle").innerText = content.title;
-        document.getElementById("pAbout").innerText = content.about;
-        document.getElementById("pAchievements").innerHTML = content.achievements;
-        document.getElementById("pSNow").innerHTML = content.snow;
+    const saved = JSON.parse(localStorage.getItem('profileData'));
+    const resume = localStorage.getItem('resumeURL');
+    if(saved) {
+        document.getElementById("userName").innerText = saved.name;
+        document.getElementById("userHeadline").innerText = saved.headline;
+        document.getElementById("pSummary").innerText = saved.summary;
+        document.getElementById("pSkills").innerHTML = saved.skills;
+        document.getElementById("pExp").innerHTML = saved.exp;
+        document.getElementById("pEdu").innerHTML = saved.edu;
     }
     if(resume) document.getElementById("resumeLink").href = resume;
 };
