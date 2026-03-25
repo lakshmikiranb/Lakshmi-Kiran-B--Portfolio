@@ -1,260 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lakshmi Kiran B | IT Support Engineer</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakshmi Kiran B | Portfolio Admin</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <style>
+        :root { --primary: #0a66c2; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+        
+        /* Hidden Admin Elements */
+        .admin-only { display: none; }
+        
+        /* Top Navigation / Admin Access */
+        .nav-bar { background: #1e293b; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        
+        header { text-align: center; padding: 50px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: 600; display: inline-block; }
+        .btn-admin { background: transparent; border: 1px solid #475569; font-size: 12px; }
+        .btn-save { background: #10b981; margin-top: 10px; width: 100%; }
 
-<style>
-:root {
-    --primary: #0a66c2;
-    --bg: #0f172a;
-    --card: rgba(255,255,255,0.05);
-    --text: #e2e8f0;
-}
-body.light {
-    --bg: #f3f6f9;
-    --card: #ffffff;
-    --text: #222;
-}
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-header {
-    text-align: center;
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #0a66c2, #1e293b);
-}
-h1 { margin: 0; font-size: 38px; }
-.tagline { margin: 10px 0; }
-.btn {
-    margin: 6px;
-    padding: 10px 16px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: white;
-    color: black;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-.card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 12px;
-}
-.skills span {
-    display: inline-block;
-    margin: 5px;
-    padding: 6px 10px;
-    background: #1e293b;
-    border-radius: 5px;
-}
-body.light .skills span { background: #e7f0fb; }
-footer { text-align: center; padding: 20px; }
-.editable { display:none; margin-top:10px; }
-</style>
+        [contenteditable="true"] { border: 1px dashed var(--primary); background: rgba(10, 102, 194, 0.1); padding: 5px; outline: none; }
+        
+        .upload-box { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; border: 2px dashed #334155; }
+        footer { text-align: center; padding: 30px; color: #64748b; font-size: 14px; }
+    </style>
 </head>
-
 <body>
 
-<div class="toggle" onclick="toggleMode()">🌙</div>
+<div class="nav-bar">
+    <span id="status">Portfolio View</span>
+    <button class="btn btn-admin" id="loginBtn" onclick="login()">Admin Login</button>
+    <button class="btn admin-only" id="logoutBtn" onclick="logout()" style="background:#ef4444">Logout</button>
+</div>
 
 <header>
-<h1 contenteditable="false">Lakshmi Kiran B</h1>
-<p class="tagline" contenteditable="false">
-L1/L2 IT Support Engineer | Active Directory & Office 365 | Windows Server | ServiceNow | ITIL V4
-</p>
-<p contenteditable="false">Bangalore, India | lakshmi2000kiran@gmail.com</p>
+    <h1 id="pName" contenteditable="false">Lakshmi Kiran B</h1>
+    <p id="pTitle" contenteditable="false">L1/L2 IT Support Engineer | ServiceNow</p>
+    <p id="pContact">Bangalore | lakshmi2000kiran@gmail.com</p>
+    
+    <a href="#" id="resumeLink" class="btn" download>📄 Download Resume</a>
 
-<a href="Lakshmi_Kiran_Resume.pdf" class="btn" download>📄 Download Resume</a>
-<button class="btn" onclick="login()">🔐 Admin Login</button>
-<button class="btn" id="uploadBtn" style="display:none;" onclick="uploadResume()">📤 Upload Resume</button>
-<input type="file" id="fileInput" style="display:none;" />
-<button class="btn" id="editBtn" style="display:none;" onclick="toggleEdit()">✏️ Edit Portfolio</button>
+    <div class="container admin-only">
+        <div class="upload-box">
+            <label><strong>Update Resume File:</strong></label><br><br>
+            <input type="file" id="fileInput">
+            <button class="btn" style="background:#6366f1" onclick="handleUpload()">Cloud Upload</button>
+            <p id="upStatus" style="font-size:12px; margin-top:10px;"></p>
+        </div>
+        <button class="btn btn-save" onclick="saveTextData()">💾 Save All Text Changes</button>
+    </div>
 </header>
 
 <div class="container">
-<div class="grid">
+    <div class="card">
+        <h2>Professional Summary</h2>
+        <p id="pAbout" contenteditable="false">
+            IT Support professional with experience in Active Directory and Office 365. 
+            Currently managing enterprise-level technical incidents.
+        </p>
+    </div>
 
-<div class="card" id="about">
-<h2>About</h2>
-<p contenteditable="false">
-IT Support Engineer with 1+ year experience providing L1/L2 support in enterprise environments.
-Specialized in Active Directory, Office 365, Windows Server, and ServiceNow ticketing.
-Focused on root cause analysis, reducing downtime, and improving user experience.
-</p>
+    <div class="card">
+        <h2>Technical Expertise</h2>
+        <p id="pSkills" contenteditable="false">
+            ServiceNow, Windows Server, DNS/DHCP, Outlook Troubleshooting, Remote Support.
+        </p>
+    </div>
 </div>
 
-<div class="card">
-<h2>Key Achievements</h2>
-<ul contenteditable="false">
-<li>Supported 100+ systems & 150+ users</li>
-<li>Handled 50+ tickets per week</li>
-<li>95% first-call resolution</li>
-<li>Reduced setup time by 40%</li>
-<li>Improved response time by 30%</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>Skills</h2>
-<div class="skills" contenteditable="false">
-<span>ServiceNow (Beginner)</span>
-<span>Active Directory</span>
-<span>Office 365</span>
-<span>Windows Server</span>
-<span>Networking</span>
-<span>DNS</span>
-<span>Outlook & PST</span>
-<span>Remote Support</span>
-</div>
-</div>
-
-<div class="card">
-<h2>Experience</h2>
-<p contenteditable="false"><b>Athena BPO Pvt Ltd</b></p>
-<ul contenteditable="false">
-<li>L1/L2 support for enterprise users</li>
-<li>Managed 150+ Active Directory users</li>
-<li>Handled 50+ weekly tickets</li>
-<li>OS & Office deployments</li>
-<li>Outlook troubleshooting</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>ServiceNow Experience</h2>
-<ul contenteditable="false">
-<li>Created & managed incident tickets</li>
-<li>Assigned priority based on impact</li>
-<li>Updated work notes</li>
-<li>Managed full lifecycle (open → resolve)</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>Real Incident Experience</h2>
-<p><b>📌 Outlook Not Receiving Emails</b></p>
-<ul contenteditable="false">
-<li>Diagnosed PST corruption</li>
-<li>Recreated profile & repaired PST</li>
-<li>Restored service within SLA</li>
-</ul>
-
-<p><b>📌 Slow System Performance</b></p>
-<ul contenteditable="false">
-<li>Identified startup apps & high RAM usage</li>
-<li>Optimized system performance</li>
-</ul>
-
-<p><b>📌 No Internet (Wi-Fi Connected)</b></p>
-<ul contenteditable="false">
-<li>Diagnosed DNS issue</li>
-<li>Flushed DNS & updated settings</li>
-<li>Resolved quickly</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>Certifications</h2>
-<ul contenteditable="false">
-<li>Introduction to ITIL V4 – Simplilearn SkillUp</li>
-<li>VLSI Internship – VLSIGURU</li>
-<li>AI & Data Analytics</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>Project</h2>
-<p contenteditable="false"><b>Air Quality Monitoring System</b></p>
-<p contenteditable="false">Arduino-based IoT system with 95% accuracy.</p>
-</div>
-
-</div>
-</div>
-
-<footer>
-<p>© 2026 Lakshmi Kiran B</p>
-</footer>
+<footer>© 2026 Lakshmi Kiran B | IT Executive</footer>
 
 <script>
-// Dark Mode
-function toggleMode() { document.body.classList.toggle("light"); }
-
-// Firebase Config (replace with your own)
+// --- CONFIGURATION ---
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
+const storage = firebase.storage();
+const MY_EMAIL = "lakshmi2000kiran@gmail.com";
 
-// Admin Login
+// --- AUTHENTICATION ---
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(result => {
-        if (result.user.email === ADMIN_EMAIL) {
-            alert("Admin Access Granted ✅");
-            document.getElementById("uploadBtn").style.display = "inline-block";
-            document.getElementById("editBtn").style.display = "inline-block";
-            enableEditing(true);
+    auth.signInWithPopup(provider).then(res => {
+        if (res.user.email === MY_EMAIL) {
+            enterAdminMode();
         } else {
-            alert("Access Denied ❌");
+            alert("Access Denied: Only Lakshmi Kiran B can edit this profile.");
             auth.signOut();
         }
     });
 }
 
-// Enable/disable editing
-function enableEditing(enable) {
+function logout() {
+    auth.signOut().then(() => location.reload());
+}
+
+function enterAdminMode() {
+    document.getElementById("status").innerText = "ADMIN ACTIVE ✅";
+    document.getElementById("loginBtn").style.display = "none";
+    
+    // Show all hidden admin tools
+    document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
+    
+    // Enable text editing
     document.querySelectorAll("[contenteditable]").forEach(el => {
-        el.contentEditable = enable;
-        if(enable) el.style.border = "1px dashed #0a66c2";
-        else el.style.border = "none";
+        el.contentEditable = "true";
     });
 }
 
-// Toggle edit mode manually
-function toggleEdit() {
-    const editable = document.querySelectorAll("[contenteditable=true]");
-    editable.forEach(el => {
-        el.contentEditable = el.contentEditable === "true" ? "false" : "true";
-    });
+// --- FILE UPLOAD (Any Format) ---
+function handleUpload() {
+    const file = document.getElementById('fileInput').files[0];
+    if(!file) return alert("Please select a file.");
+
+    const ref = storage.ref('active_resume/' + file.name);
+    const task = ref.put(file);
+
+    task.on('state_changed', 
+        snap => {
+            let pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+            document.getElementById('upStatus').innerText = "Progress: " + Math.round(pct) + "%";
+        },
+        err => alert(err),
+        () => {
+            task.snapshot.ref.getDownloadURL().then(url => {
+                document.getElementById('resumeLink').href = url;
+                localStorage.setItem('liveResume', url);
+                alert("Resume synced to cloud!");
+            });
+        }
+    );
 }
 
-// Upload Resume
-function uploadResume() { document.getElementById("fileInput").click(); }
-document.getElementById("fileInput").addEventListener("change", function() {
-    const file = this.files[0];
-    if(file) alert("Resume selected: " + file.name);
-});
+// --- PERSISTENCE ---
+function saveTextData() {
+    const profile = {
+        name: document.getElementById("pName").innerText,
+        title: document.getElementById("pTitle").innerText,
+        about: document.getElementById("pAbout").innerText,
+        skills: document.getElementById("pSkills").innerText
+    };
+    localStorage.setItem('localProfile', JSON.stringify(profile));
+    alert("Professional details updated!");
+}
+
+window.onload = () => {
+    const saved = JSON.parse(localStorage.getItem('localProfile'));
+    const savedUrl = localStorage.getItem('liveResume');
+    if(saved) {
+        document.getElementById("pName").innerText = saved.name;
+        document.getElementById("pTitle").innerText = saved.title;
+        document.getElementById("pAbout").innerText = saved.about;
+        document.getElementById("pSkills").innerText = saved.skills;
+    }
+    if(savedUrl) document.getElementById("resumeLink").href = savedUrl;
+};
 </script>
 
 </body>
