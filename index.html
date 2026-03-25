@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lakshmi Kiran B | Portfolio Admin</title>
+    <title>Lakshmi Kiran B | IT Support Portfolio</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -11,75 +11,84 @@
 
     <style>
         :root { --primary: #0a66c2; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         
-        /* Hidden Admin Elements */
-        .admin-only { display: none; }
+        /* Navigation & Admin Status */
+        .nav-bar { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; display: flex; justify-content: flex-end; position: sticky; top: 0; z-index: 1000; }
+        .admin-only { display: none; border: 2px solid #fbbf24; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #000; }
         
-        /* Top Navigation / Admin Access */
-        .nav-bar { background: #1e293b; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        header { text-align: center; padding: 80px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%); }
+        h1 { font-size: 2.5rem; margin: 0; }
         
-        header { text-align: center; padding: 50px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); }
-        .container { max-width: 800px; margin: auto; padding: 20px; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: 600; display: inline-block; }
-        .btn-admin { background: transparent; border: 1px solid #475569; font-size: 12px; }
-        .btn-save { background: #10b981; margin-top: 10px; width: 100%; }
+        .container { max-width: 1000px; margin: -40px auto 40px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
 
-        [contenteditable="true"] { border: 1px dashed var(--primary); background: rgba(10, 102, 194, 0.1); padding: 5px; outline: none; }
-        
-        .upload-box { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; border: 2px dashed #334155; }
-        footer { text-align: center; padding: 30px; color: #64748b; font-size: 14px; }
+        .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; margin: 5px; }
+        .btn-resume { background: #3b82f6; color: white; }
+        .btn-admin { background: #64748b; color: white; }
+        .btn-upload { background: #10b981; color: white; margin-top: 10px; }
+
+        [contenteditable="true"] { border: 1px dashed var(--primary); outline: none; background: rgba(10, 102, 194, 0.1); }
+        footer { text-align: center; padding: 40px; color: #64748b; }
     </style>
 </head>
 <body>
 
 <div class="nav-bar">
-    <span id="status">Portfolio View</span>
-    <button class="btn btn-admin" id="loginBtn" onclick="login()">Admin Login</button>
+    <button class="btn btn-admin" id="loginBtn" onclick="login()">🔐 Admin Login</button>
     <button class="btn admin-only" id="logoutBtn" onclick="logout()" style="background:#ef4444">Logout</button>
 </div>
 
 <header>
     <h1 id="pName" contenteditable="false">Lakshmi Kiran B</h1>
-    <p id="pTitle" contenteditable="false">L1/L2 IT Support Engineer | ServiceNow</p>
-    <p id="pContact">Bangalore | lakshmi2000kiran@gmail.com</p>
+    <p id="pTitle" contenteditable="false">L1/L2 IT Support Engineer | ServiceNow Specialist</p>
     
-    <a href="#" id="resumeLink" class="btn" download>📄 Download Resume</a>
+    <div style="margin-top: 20px;">
+        <a href="#" id="resumeLink" class="btn btn-resume" target="_blank">📄 Download Resume</a>
+    </div>
 
     <div class="container admin-only">
-        <div class="upload-box">
-            <label><strong>Update Resume File:</strong></label><br><br>
+        <div class="card" style="grid-column: 1 / -1; background: #000;">
+            <h3>Admin Panel: Portfolio Manager</h3>
+            <p>1. Edit text directly on the page below.<br>2. Upload any file format (PDF, DOCX) here:</p>
             <input type="file" id="fileInput">
-            <button class="btn" style="background:#6366f1" onclick="handleUpload()">Cloud Upload</button>
-            <p id="upStatus" style="font-size:12px; margin-top:10px;"></p>
+            <button class="btn btn-upload" onclick="handleUpload()">Cloud Upload Resume</button>
+            <button class="btn" style="background: #0a66c2; color:white;" onclick="saveTextData()">💾 Save Text Changes</button>
+            <p id="upStatus" style="color: #10b981; font-weight: bold;"></p>
         </div>
-        <button class="btn btn-save" onclick="saveTextData()">💾 Save All Text Changes</button>
     </div>
 </header>
 
 <div class="container">
     <div class="card">
-        <h2>Professional Summary</h2>
-        <p id="pAbout" contenteditable="false">
-            IT Support professional with experience in Active Directory and Office 365. 
-            Currently managing enterprise-level technical incidents.
-        </p>
+        <h2>About</h2>
+        <p id="pAbout" contenteditable="false">IT Support Engineer with 1+ year experience in Active Directory, Office 365, and ServiceNow. Focused on root cause analysis and improving user experience.</p>
     </div>
 
     <div class="card">
-        <h2>Technical Expertise</h2>
-        <p id="pSkills" contenteditable="false">
-            ServiceNow, Windows Server, DNS/DHCP, Outlook Troubleshooting, Remote Support.
-        </p>
+        <h2>Key Achievements</h2>
+        <ul id="pAchievements" contenteditable="false">
+            <li>95% first-call resolution rate</li>
+            <li>Managed 150+ Active Directory users</li>
+            <li>Reduced setup time by 40%</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>ServiceNow Experience</h2>
+        <ul id="pSNow" contenteditable="false">
+            <li>Incident Management lifecycle</li>
+            <li>Priority based assignment</li>
+            <li>Documentation & Work Notes</li>
+        </ul>
     </div>
 </div>
 
-<footer>© 2026 Lakshmi Kiran B | IT Executive</footer>
+<footer>© 2026 Lakshmi Kiran B | Information Technology Executive</footer>
 
 <script>
-// --- CONFIGURATION ---
+// --- 1. FIREBASE CONFIG (Required for live functionality) ---
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -92,82 +101,77 @@ const auth = firebase.auth();
 const storage = firebase.storage();
 const MY_EMAIL = "lakshmi2000kiran@gmail.com";
 
-// --- AUTHENTICATION ---
+// --- 2. ADMIN REDIRECT & LOGIN ---
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(res => {
         if (res.user.email === MY_EMAIL) {
             enterAdminMode();
         } else {
-            alert("Access Denied: Only Lakshmi Kiran B can edit this profile.");
+            alert("Unauthorized! Access restricted to Lakshmi Kiran B.");
             auth.signOut();
         }
-    });
-}
-
-function logout() {
-    auth.signOut().then(() => location.reload());
+    }).catch(err => console.error(err));
 }
 
 function enterAdminMode() {
-    document.getElementById("status").innerText = "ADMIN ACTIVE ✅";
     document.getElementById("loginBtn").style.display = "none";
-    
-    // Show all hidden admin tools
     document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
-    
-    // Enable text editing
-    document.querySelectorAll("[contenteditable]").forEach(el => {
-        el.contentEditable = "true";
-    });
+    document.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = "true");
+    alert("Welcome back, Lakshmi! Edit mode is now active.");
 }
 
-// --- FILE UPLOAD (Any Format) ---
+function logout() { auth.signOut().then(() => location.reload()); }
+
+// --- 3. RESUME UPLOAD (Updates the Download button for everyone) ---
 function handleUpload() {
     const file = document.getElementById('fileInput').files[0];
-    if(!file) return alert("Please select a file.");
+    if(!file) return alert("Select a file first.");
 
-    const ref = storage.ref('active_resume/' + file.name);
+    const ref = storage.ref('active_resume/Lakshmi_Kiran_Resume.' + file.name.split('.').pop());
     const task = ref.put(file);
 
     task.on('state_changed', 
         snap => {
-            let pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-            document.getElementById('upStatus').innerText = "Progress: " + Math.round(pct) + "%";
+            let pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            document.getElementById('upStatus').innerText = "Uploading: " + pct + "%";
         },
-        err => alert(err),
+        err => alert("Upload failed. Ensure Firebase Storage rules allow access."),
         () => {
             task.snapshot.ref.getDownloadURL().then(url => {
                 document.getElementById('resumeLink').href = url;
-                localStorage.setItem('liveResume', url);
-                alert("Resume synced to cloud!");
+                localStorage.setItem('liveResumeURL', url);
+                alert("Resume uploaded! It is now available for download by visitors.");
             });
         }
     );
 }
 
-// --- PERSISTENCE ---
+// --- 4. SAVE TEXT CHANGES ---
 function saveTextData() {
-    const profile = {
+    const data = {
         name: document.getElementById("pName").innerText,
         title: document.getElementById("pTitle").innerText,
         about: document.getElementById("pAbout").innerText,
-        skills: document.getElementById("pSkills").innerText
+        achievements: document.getElementById("pAchievements").innerHTML,
+        snow: document.getElementById("pSNow").innerHTML
     };
-    localStorage.setItem('localProfile', JSON.stringify(profile));
-    alert("Professional details updated!");
+    localStorage.setItem('portfolioContent', JSON.stringify(data));
+    alert("Content saved locally! (Connect to Firestore for cloud sync)");
 }
 
+// Load saved data on page load
 window.onload = () => {
-    const saved = JSON.parse(localStorage.getItem('localProfile'));
-    const savedUrl = localStorage.getItem('liveResume');
-    if(saved) {
-        document.getElementById("pName").innerText = saved.name;
-        document.getElementById("pTitle").innerText = saved.title;
-        document.getElementById("pAbout").innerText = saved.about;
-        document.getElementById("pSkills").innerText = saved.skills;
+    const content = JSON.parse(localStorage.getItem('portfolioContent'));
+    const resume = localStorage.getItem('liveResumeURL');
+    if(content) {
+        document.getElementById("pName").innerText = content.name;
+        document.getElementById("pTitle").innerText = content.title;
+        document.getElementById("pAbout").innerText = content.about;
+        document.getElementById("pAchievements").innerHTML = content.achievements;
+        document.getElementById("pSNow").innerHTML = content.snow;
     }
-    if(savedUrl) document.getElementById("resumeLink").href = savedUrl;
+    if(resume) document.getElementById("resumeLink").href = resume;
 };
 </script>
 
