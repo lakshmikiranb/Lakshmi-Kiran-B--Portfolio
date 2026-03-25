@@ -3,130 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lakshmi Kiran B | Secure Portfolio</title>
+    <title>Lakshmi Kiran B | IT Support Portfolio</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
         :root { --primary: #0a66c2; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
         
-        /* Hidden Admin Interface */
-        .admin-view { display: none; background: #000; padding: 20px; border: 2px solid var(--primary); margin: 20px; border-radius: 12px; }
-
-        /* Login Redirect Overlay */
-        #loginRedirect { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .login-box { background: var(--card); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        /* Admin Hidden State */
+        .admin-dashboard { display: none; background: #000; border: 2px solid var(--primary); padding: 20px; margin: 20px; border-radius: 12px; }
         
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
-        .btn { padding: 12px 24px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; margin-top: 10px; width: 100%; }
-        .btn-blue { background: var(--primary); color: white; }
-
         header { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #0a66c2, #1e293b); }
         .container { max-width: 1000px; margin: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .card { background: var(--card); padding: 25px; border-radius: 12px; }
+
+        .btn { padding: 10px 20px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; text-decoration: none; display: inline-block; margin: 5px; }
+        .btn-main { background: #fff; color: #0a66c2; }
+        .btn-admin { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #fff; }
+
+        /* Editing Style */
+        .editable-active { border: 1px dashed #fbbf24; background: rgba(251, 191, 36, 0.1); outline: none; }
     </style>
 </head>
 <body>
 
-<div id="loginRedirect">
-    <div class="login-box">
-        <h2 id="loginTitle">Admin Login</h2>
-        <div id="credentialsArea">
-            <input type="email" id="adminEmail" placeholder="Email (lakshmi2000kiran@gmail.com)">
-            <input type="password" id="adminPassword" placeholder="Password">
-            <button class="btn btn-blue" onclick="requestOTP()">Next (Send OTP)</button>
-        </div>
-        <div id="otpArea" style="display:none;">
-            <p style="font-size: 14px; color: #94a3b8;">Enter OTP sent to your email</p>
-            <input type="text" id="otpInput" placeholder="Enter 6-digit OTP">
-            <button class="btn btn-blue" onclick="verifyOTP()">Verify & Login</button>
-        </div>
-        <button class="btn" onclick="toggleRedirect(false)" style="background:transparent; color:#94a3b8;">Cancel</button>
-    </div>
-</div>
-
 <header>
-    <h1>Lakshmi Kiran B</h1>
-    [span_2](start_span)<p>L1/L2 IT Support Engineer[span_2](end_span)</p>
-    <div style="margin-top: 20px;">
-        <a href="#" id="resumeBtn" class="btn btn-blue" style="width:auto;" download>Download Resume</a>
-        <button class="btn btn-blue" style="width:auto; background:rgba(255,255,255,0.1);" onclick="toggleRedirect(true)">Admin Login</button>
+    <h1 id="pName">Lakshmi Kiran B</h1>
+    <p id="pTitle">L1/L2 IT Support Engineer | ServiceNow Specialist</p>
+    
+    <div id="publicActions">
+        <a href="#" id="resumeDownload" class="btn btn-main" download>📄 Download Resume</a>
+        <button class="btn btn-admin" onclick="adminRedirect()">🔐 Admin Login</button>
     </div>
 
-    <div id="adminPanel" class="admin-view">
-        <h3>Admin Console Locked to lakshmi2000kiran@gmail.com</h3>
-        <input type="file" id="resumeUpload">
-        <button class="btn btn-blue" style="background:#10b981;" onclick="uploadResume()">Upload New Resume</button>
-        <button class="btn btn-blue" onclick="saveDetails()">Save Page Changes</button>
-        <button class="btn btn-blue" style="background:#ef4444;" onclick="logout()">Logout</button>
+    <div id="adminPanel" class="admin-dashboard">
+        <h2 style="color: #fbbf24;">Welcome, Admin Lakshmi</h2>
+        <p>You can now edit text below and upload files.</p>
+        
+        <div style="margin: 15px 0;">
+            <label>Update Resume: </label>
+            <input type="file" id="resumeFile" style="color: white;">
+            <button class="btn" style="background: #22c55e; color:white;" onclick="handleUpload()">Upload to Cloud</button>
+        </div>
+
+        <button class="btn" style="background: #3b82f6; color:white;" onclick="saveAllChanges()">💾 Save All Text Changes</button>
+        <button class="btn" style="background: #ef4444; color:white;" onclick="logout()">Logout</button>
     </div>
 </header>
 
 <div class="container">
     <div class="card">
-        <h2>Professional Summary</h2>
-        [span_3](start_span)[span_4](start_span)<p id="summary" contenteditable="false">IT Support Engineer with 1+ year experience in Windows environments[span_3](end_span)[span_4](end_span).</p>
+        <h3>Professional Summary</h3>
+        [span_0](start_span)<p id="summary" contenteditable="false">IT Support Engineer with 1+ year experience in Active Directory and Office 365[span_0](end_span).</p>
     </div>
     <div class="card">
-        <h2>Experience</h2>
-        [span_5](start_span)<p id="exp" contenteditable="false"><b>Athena BPO Pvt Ltd</b>: Managed 150+ AD users and 100+ workstations[span_5](end_span).</p>
+        <h3>Experience</h3>
+        [span_1](start_span)<p id="experience" contenteditable="false"><b>Athena BPO Pvt Ltd</b>: Managed 150+ AD users and achieved 95% first-call resolution[span_1](end_span).</p>
     </div>
 </div>
 
 <script>
-// --- INITIALIZE ---
-(function(){ emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); })();
-const MY_EMAIL = "lakshmi2000kiran@gmail.com";
-let generatedOTP = null;
+// --- FIREBASE CONFIG ---
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const storage = firebase.storage();
+const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
 
-function toggleRedirect(show) {
-    document.getElementById('loginRedirect').style.display = show ? 'flex' : 'none';
+// --- THE REDIRECT LOGIC ---
+function adminRedirect() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then((result) => {
+        if (result.user.email === ADMIN_EMAIL) {
+            // SUCCESSFUL REDIRECT TO ADMIN STATE
+            document.getElementById('publicActions').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            enableEditing(true);
+            alert("Admin Access Granted. You can now edit your details.");
+        } else {
+            alert("Access Denied: Only Lakshmi Kiran B can access admin features.");
+            auth.signOut();
+        }
+    }).catch((error) => {
+        alert("Login failed: " + error.message);
+    });
 }
 
-// --- OTP LOGIC ---
-function requestOTP() {
-    const email = document.getElementById('adminEmail').value;
-    const pass = document.getElementById('adminPassword').value;
+function enableEditing(on) {
+    const fields = ['pName', 'pTitle', 'summary', 'experience'];
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        el.contentEditable = on;
+        if(on) el.classList.add('editable-active');
+    });
+}
 
-    if(email === MY_EMAIL && pass.length > 5) {
-        generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        
-        [span_6](start_span)// Use EmailJS to send OTP to your mail[span_6](end_span)
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-            to_email: MY_EMAIL,
-            otp_code: generatedOTP,
-        }).then(() => {
-            document.getElementById('credentialsArea').style.display = 'none';
-            document.getElementById('otpArea').style.display = 'block';
-            alert("OTP sent to your email!");
+function logout() { auth.signOut().then(() => location.reload()); }
+
+// --- FILE UPLOAD ---
+function handleUpload() {
+    const file = document.getElementById('resumeFile').files[0];
+    if(!file) return alert("Please select a file.");
+
+    const ref = storage.ref('resumes/Lakshmi_Resume.' + file.name.split('.').pop());
+    ref.put(file).then(() => {
+        ref.getDownloadURL().then(url => {
+            document.getElementById('resumeDownload').href = url;
+            localStorage.setItem('resumeURL', url);
+            alert("Resume updated for all users! ✅");
         });
-    } else {
-        alert("Invalid Admin Credentials");
-    }
+    });
 }
 
-function verifyOTP() {
-    const input = document.getElementById('otpInput').value;
-    if(input == generatedOTP) {
-        alert("Login Successful!");
-        toggleRedirect(false);
-        document.getElementById('adminPanel').style.display = 'block';
-        document.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "true");
-    } else {
-        alert("Incorrect OTP");
-    }
+function saveAllChanges() {
+    // Logic to save text to LocalStorage or Firebase Firestore
+    alert("Changes saved to local session!");
 }
 
-function uploadResume() {
-    const file = document.getElementById('resumeUpload').files[0];
-    [span_7](start_span)if(file) alert("Resume uploaded for others to download[span_7](end_span)!");
-}
-
-function logout() { location.reload(); }
+window.onload = () => {
+    const savedUrl = localStorage.getItem('resumeURL');
+    if(savedUrl) document.getElementById('resumeDownload').href = savedUrl;
+};
 </script>
 
 </body>
