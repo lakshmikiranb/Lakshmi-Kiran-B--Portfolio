@@ -16,30 +16,24 @@
     --card: rgba(255,255,255,0.05);
     --text: #e2e8f0;
 }
-
 body.light {
     --bg: #f3f6f9;
     --card: #ffffff;
     --text: #222;
 }
-
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
 }
-
 header {
     text-align: center;
     padding: 60px 20px;
     background: linear-gradient(135deg, #0a66c2, #1e293b);
 }
-
 h1 { margin: 0; font-size: 38px; }
-
 .tagline { margin: 10px 0; }
-
 .btn {
     margin: 6px;
     padding: 10px 16px;
@@ -49,7 +43,6 @@ h1 { margin: 0; font-size: 38px; }
     border-radius: 6px;
     cursor: pointer;
 }
-
 .toggle {
     position: absolute;
     top: 20px;
@@ -59,25 +52,21 @@ h1 { margin: 0; font-size: 38px; }
     padding: 5px 10px;
     cursor: pointer;
 }
-
 .container {
     max-width: 1100px;
     margin: auto;
     padding: 20px;
 }
-
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
-
 .card {
     background: var(--card);
     padding: 20px;
     border-radius: 12px;
 }
-
 .skills span {
     display: inline-block;
     margin: 5px;
@@ -85,15 +74,9 @@ h1 { margin: 0; font-size: 38px; }
     background: #1e293b;
     border-radius: 5px;
 }
-
-body.light .skills span {
-    background: #e7f0fb;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-}
+body.light .skills span { background: #e7f0fb; }
+footer { text-align: center; padding: 20px; }
+.editable { display:none; margin-top:10px; }
 </style>
 </head>
 
@@ -102,35 +85,34 @@ footer {
 <div class="toggle" onclick="toggleMode()">🌙</div>
 
 <header>
-<h1>Lakshmi Kiran B</h1>
-<p class="tagline">
+<h1 contenteditable="false">Lakshmi Kiran B</h1>
+<p class="tagline" contenteditable="false">
 L1/L2 IT Support Engineer | Active Directory & Office 365 | Windows Server | ServiceNow | ITIL V4
 </p>
-<p>Bangalore, India | lakshmi2000kiran@gmail.com</p>
+<p contenteditable="false">Bangalore, India | lakshmi2000kiran@gmail.com</p>
 
 <a href="Lakshmi_Kiran_Resume.pdf" class="btn" download>📄 Download Resume</a>
 <button class="btn" onclick="login()">🔐 Admin Login</button>
 <button class="btn" id="uploadBtn" style="display:none;" onclick="uploadResume()">📤 Upload Resume</button>
-
 <input type="file" id="fileInput" style="display:none;" />
+<button class="btn" id="editBtn" style="display:none;" onclick="toggleEdit()">✏️ Edit Portfolio</button>
 </header>
 
 <div class="container">
 <div class="grid">
 
-<div class="card">
+<div class="card" id="about">
 <h2>About</h2>
-<p>
+<p contenteditable="false">
 IT Support Engineer with 1+ year experience providing L1/L2 support in enterprise environments.
 Specialized in Active Directory, Office 365, Windows Server, and ServiceNow ticketing.
-
 Focused on root cause analysis, reducing downtime, and improving user experience.
 </p>
 </div>
 
 <div class="card">
 <h2>Key Achievements</h2>
-<ul>
+<ul contenteditable="false">
 <li>Supported 100+ systems & 150+ users</li>
 <li>Handled 50+ tickets per week</li>
 <li>95% first-call resolution</li>
@@ -141,7 +123,7 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 
 <div class="card">
 <h2>Skills</h2>
-<div class="skills">
+<div class="skills" contenteditable="false">
 <span>ServiceNow (Beginner)</span>
 <span>Active Directory</span>
 <span>Office 365</span>
@@ -155,8 +137,8 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 
 <div class="card">
 <h2>Experience</h2>
-<p><b>Athena BPO Pvt Ltd</b></p>
-<ul>
+<p contenteditable="false"><b>Athena BPO Pvt Ltd</b></p>
+<ul contenteditable="false">
 <li>L1/L2 support for enterprise users</li>
 <li>Managed 150+ Active Directory users</li>
 <li>Handled 50+ weekly tickets</li>
@@ -167,7 +149,7 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 
 <div class="card">
 <h2>ServiceNow Experience</h2>
-<ul>
+<ul contenteditable="false">
 <li>Created & managed incident tickets</li>
 <li>Assigned priority based on impact</li>
 <li>Updated work notes</li>
@@ -175,35 +157,32 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 </ul>
 </div>
 
-<!-- 🔥 REAL INCIDENT SECTION -->
 <div class="card">
 <h2>Real Incident Experience</h2>
-
 <p><b>📌 Outlook Not Receiving Emails</b></p>
-<ul>
+<ul contenteditable="false">
 <li>Diagnosed PST corruption</li>
 <li>Recreated profile & repaired PST</li>
 <li>Restored service within SLA</li>
 </ul>
 
 <p><b>📌 Slow System Performance</b></p>
-<ul>
+<ul contenteditable="false">
 <li>Identified startup apps & high RAM usage</li>
 <li>Optimized system performance</li>
 </ul>
 
 <p><b>📌 No Internet (Wi-Fi Connected)</b></p>
-<ul>
+<ul contenteditable="false">
 <li>Diagnosed DNS issue</li>
 <li>Flushed DNS & updated settings</li>
 <li>Resolved quickly</li>
 </ul>
-
 </div>
 
 <div class="card">
 <h2>Certifications</h2>
-<ul>
+<ul contenteditable="false">
 <li>Introduction to ITIL V4 – Simplilearn SkillUp</li>
 <li>VLSI Internship – VLSIGURU</li>
 <li>AI & Data Analytics</li>
@@ -212,8 +191,8 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 
 <div class="card">
 <h2>Project</h2>
-<p><b>Air Quality Monitoring System</b></p>
-<p>Arduino-based IoT system with 95% accuracy.</p>
+<p contenteditable="false"><b>Air Quality Monitoring System</b></p>
+<p contenteditable="false">Arduino-based IoT system with 95% accuracy.</p>
 </div>
 
 </div>
@@ -225,29 +204,27 @@ Focused on root cause analysis, reducing downtime, and improving user experience
 
 <script>
 // Dark Mode
-function toggleMode() {
-    document.body.classList.toggle("light");
-}
+function toggleMode() { document.body.classList.toggle("light"); }
 
-// Firebase Config (REPLACE THIS)
+// Firebase Config (replace with your own)
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-
 const ADMIN_EMAIL = "lakshmi2000kiran@gmail.com";
 
-// Login
+// Admin Login
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(result => {
         if (result.user.email === ADMIN_EMAIL) {
             alert("Admin Access Granted ✅");
             document.getElementById("uploadBtn").style.display = "inline-block";
+            document.getElementById("editBtn").style.display = "inline-block";
+            enableEditing(true);
         } else {
             alert("Access Denied ❌");
             auth.signOut();
@@ -255,16 +232,28 @@ function login() {
     });
 }
 
-// Upload
-function uploadResume() {
-    document.getElementById("fileInput").click();
+// Enable/disable editing
+function enableEditing(enable) {
+    document.querySelectorAll("[contenteditable]").forEach(el => {
+        el.contentEditable = enable;
+        if(enable) el.style.border = "1px dashed #0a66c2";
+        else el.style.border = "none";
+    });
 }
 
+// Toggle edit mode manually
+function toggleEdit() {
+    const editable = document.querySelectorAll("[contenteditable=true]");
+    editable.forEach(el => {
+        el.contentEditable = el.contentEditable === "true" ? "false" : "true";
+    });
+}
+
+// Upload Resume
+function uploadResume() { document.getElementById("fileInput").click(); }
 document.getElementById("fileInput").addEventListener("change", function() {
     const file = this.files[0];
-    if (file) {
-        alert("Resume selected: " + file.name);
-    }
+    if(file) alert("Resume selected: " + file.name);
 });
 </script>
 
